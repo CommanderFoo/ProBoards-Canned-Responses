@@ -1,4 +1,4 @@
-Canned Responses 1.0.0
+Canned Responses 1.1.0
 ======================
 
 http://support.proboards.com/thread/637930/canned-responses

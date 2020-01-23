@@ -64,6 +64,21 @@ var Canned_Responses = function () {
 			}
 		}
 	}, {
+		key: "can_use_in_board",
+		value: function can_use_in_board(board_ids) {
+			if (Array.isArray(board_ids) && board_ids.length > 0) {
+				var board_id = parseInt(pb.data("page").board.id, 10) || 0;
+
+				if ($.inArrayLoose(board_id, board_ids) > -1) {
+					return true;
+				}
+			} else {
+				return true;
+			}
+
+			return false;
+		}
+	}, {
 		key: "create_canned_list",
 		value: function create_canned_list() {
 			var _this = this;
@@ -72,10 +87,19 @@ var Canned_Responses = function () {
 				return;
 			}
 
+			var has_options = false;
 			var $menu = $("<ul class='options_menu hide ui-menu ui-helper-clearfix ui-selectMenu' />");
 
 			for (var r = 0, l = this.responses.length; r < l; ++r) {
-				$menu.append("<li data-canned-response-index='" + r + "'><a>" + this.responses[r].title + "</a></li>");
+				if (this.can_use_in_board(this.responses[r].boards)) {
+					has_options = true;
+
+					$menu.append("<li data-canned-response-index='" + r + "'><a>" + this.responses[r].title + "</a></li>");
+				}
+			}
+
+			if (!has_options) {
+				return;
 			}
 
 			$menu.appendTo(document.body);

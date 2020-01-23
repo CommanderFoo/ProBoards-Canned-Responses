@@ -59,15 +59,38 @@ class Canned_Responses {
 		}
 	}
 
+	static can_use_in_board(board_ids){
+		if(Array.isArray(board_ids) && board_ids.length > 0){
+			let board_id = parseInt(pb.data("page").board.id, 10) || 0;
+
+			if($.inArrayLoose(board_id, board_ids) > -1){
+				return true;
+			}
+		} else {
+			return true;
+		}
+
+		return false;
+	}
+
 	static create_canned_list(){
 		if(!this.responses.length){
 			return;
 		}
 
+		let has_options = false;
 		let $menu = $("<ul class='options_menu hide ui-menu ui-helper-clearfix ui-selectMenu' />");
 
 		for(let r = 0, l = this.responses.length; r < l; ++ r){
-			$menu.append("<li data-canned-response-index='" + r + "'><a>" + this.responses[r].title + "</a></li>");
+			if(this.can_use_in_board(this.responses[r].boards)){
+				has_options = true;
+
+				$menu.append("<li data-canned-response-index='" + r + "'><a>" + this.responses[r].title + "</a></li>");
+			}
+		}
+
+		if(!has_options){
+			return;
 		}
 
 		$menu.appendTo(document.body);
